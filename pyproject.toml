@@ -1,0 +1,13 @@
+[project]
+name = "xainids"
+version = "0.1.0"
+description = "XAI-IDS: Towards Proposing an Explainable Artificial Intelligence Framework for Enhancing Network Intrusion Detection Systems"
+requires-python = ">=3.12"
+dependencies = [
+    "ipykernel>=6.29.5",
+    "matplotlib>=3.10.3",
+    "numpy>=2.3.0",
+    "pandas>=2.3.0",
+    "scipy>=1.15.3",
+    "seaborn>=0.13.2",
+]
