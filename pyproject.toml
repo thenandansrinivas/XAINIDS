@@ -5,12 +5,13 @@ description = "XAI-IDS: Towards Proposing an Explainable Artificial Intelligence
 requires-python = ">=3.12"
 dependencies = [
     "ipykernel>=6.29.5",
+    "ipython>=9.3.0",
     "lightgbm>=4.6.0",
+    "lime>=0.2.0.1",
     "matplotlib>=3.10.3",
     "numpy>=2.3.0",
     "pandas>=2.3.0",
     "scikit-learn>=1.7.0",
-    "scipy>=1.15.3",
     "seaborn>=0.13.2",
     "tqdm>=4.67.1",
     "xgboost>=3.0.2",
