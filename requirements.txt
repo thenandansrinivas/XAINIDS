@@ -3,7 +3,9 @@
 asttokens==3.0.0
     # via stack-data
 colorama==0.4.6
-    # via ipython
+    # via
+    #   ipython
+    #   tqdm
 comm==0.2.2
     # via ipykernel
 contourpy==1.3.2
@@ -18,14 +20,20 @@ executing==2.2.0
     # via stack-data
 fonttools==4.58.4
     # via matplotlib
+imageio==2.37.0
+    # via scikit-image
 ipykernel==6.29.5
     # via xainids (pyproject.toml)
 ipython==9.3.0
-    # via ipykernel
+    # via
+    #   xainids (pyproject.toml)
+    #   ipykernel
 ipython-pygments-lexers==1.1.1
     # via ipython
 jedi==0.19.2
     # via ipython
+joblib==1.5.1
+    # via scikit-learn
 jupyter-client==8.6.3
     # via ipykernel
 jupyter-core==5.8.1
@@ -34,9 +42,16 @@ jupyter-core==5.8.1
     #   jupyter-client
 kiwisolver==1.4.8
     # via matplotlib
+lazy-loader==0.4
+    # via scikit-image
+lightgbm==4.6.0
+    # via xainids (pyproject.toml)
+lime==0.2.0.1
+    # via xainids (pyproject.toml)
 matplotlib==3.10.3
     # via
     #   xainids (pyproject.toml)
+    #   lime
     #   seaborn
 matplotlib-inline==0.1.7
     # via
@@ -44,17 +59,29 @@ matplotlib-inline==0.1.7
     #   ipython
 nest-asyncio==1.6.0
     # via ipykernel
+networkx==3.5
+    # via scikit-image
 numpy==2.3.0
     # via
     #   xainids (pyproject.toml)
     #   contourpy
+    #   imageio
+    #   lightgbm
+    #   lime
     #   matplotlib
     #   pandas
+    #   scikit-image
+    #   scikit-learn
+    #   scipy
     #   seaborn
+    #   tifffile
+    #   xgboost
 packaging==25.0
     # via
     #   ipykernel
+    #   lazy-loader
     #   matplotlib
+    #   scikit-image
 pandas==2.3.0
     # via
     #   xainids (pyproject.toml)
@@ -62,7 +89,10 @@ pandas==2.3.0
 parso==0.8.4
     # via jedi
 pillow==11.2.1
-    # via matplotlib
+    # via
+    #   imageio
+    #   matplotlib
+    #   scikit-image
 platformdirs==4.3.8
     # via jupyter-core
 prompt-toolkit==3.0.51
@@ -90,16 +120,37 @@ pyzmq==27.0.0
     # via
     #   ipykernel
     #   jupyter-client
+scikit-image==0.25.2
+    # via lime
+scikit-learn==1.7.0
+    # via
+    #   xainids (pyproject.toml)
+    #   lime
+scipy==1.15.3
+    # via
+    #   lightgbm
+    #   lime
+    #   scikit-image
+    #   scikit-learn
+    #   xgboost
 seaborn==0.13.2
     # via xainids (pyproject.toml)
 six==1.17.0
     # via python-dateutil
 stack-data==0.6.3
     # via ipython
+threadpoolctl==3.6.0
+    # via scikit-learn
+tifffile==2025.6.11
+    # via scikit-image
 tornado==6.5.1
     # via
     #   ipykernel
     #   jupyter-client
+tqdm==4.67.1
+    # via
+    #   xainids (pyproject.toml)
+    #   lime
 traitlets==5.14.3
     # via
     #   comm
@@ -112,3 +163,5 @@ tzdata==2025.2
     # via pandas
 wcwidth==0.2.13
     # via prompt-toolkit
+xgboost==3.0.2
+    # via xainids (pyproject.toml)
