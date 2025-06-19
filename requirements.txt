@@ -18,6 +18,8 @@ charset-normalizer==3.4.2
     # via requests
 click==8.2.1
     # via streamlit
+cloudpickle==3.1.1
+    # via shap
 colorama==0.4.6
     # via
     #   click
@@ -79,6 +81,8 @@ lightgbm==4.6.0
     # via xainids (pyproject.toml)
 lime==0.2.0.1
     # via xainids (pyproject.toml)
+llvmlite==0.44.0
+    # via numba
 markupsafe==3.0.2
     # via jinja2
 matplotlib==3.10.3
@@ -96,6 +100,8 @@ nest-asyncio==1.6.0
     # via ipykernel
 networkx==3.5
     # via scikit-image
+numba==0.61.2
+    # via shap
 numpy==2.0.0
     # via
     #   xainids (pyproject.toml)
@@ -104,12 +110,14 @@ numpy==2.0.0
     #   lightgbm
     #   lime
     #   matplotlib
+    #   numba
     #   pandas
     #   pydeck
     #   scikit-image
     #   scikit-learn
     #   scipy
     #   seaborn
+    #   shap
     #   streamlit
     #   tifffile
     #   xgboost
@@ -120,11 +128,13 @@ packaging==25.0
     #   lazy-loader
     #   matplotlib
     #   scikit-image
+    #   shap
     #   streamlit
 pandas==2.3.0
     # via
     #   xainids (pyproject.toml)
     #   seaborn
+    #   shap
     #   streamlit
 parso==0.8.4
     # via jedi
@@ -183,17 +193,23 @@ scikit-learn==1.7.0
     # via
     #   xainids (pyproject.toml)
     #   lime
+    #   shap
 scipy==1.15.3
     # via
     #   lightgbm
     #   lime
     #   scikit-image
     #   scikit-learn
+    #   shap
     #   xgboost
 seaborn==0.13.2
     # via xainids (pyproject.toml)
+shap==0.48.0
+    # via xainids (pyproject.toml)
 six==1.17.0
     # via python-dateutil
+slicer==0.0.8
+    # via shap
 smmap==5.0.2
     # via gitdb
 stack-data==0.6.3
@@ -217,6 +233,7 @@ tqdm==4.67.1
     # via
     #   xainids (pyproject.toml)
     #   lime
+    #   shap
 traitlets==5.14.3
     # via
     #   comm
@@ -229,6 +246,7 @@ typing-extensions==4.14.0
     # via
     #   altair
     #   referencing
+    #   shap
     #   streamlit
 tzdata==2025.2
     # via pandas
