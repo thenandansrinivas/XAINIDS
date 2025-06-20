@@ -8,6 +8,7 @@ import lime.lime_tabular
 import shap
 import matplotlib.pyplot as plt
 import warnings
+import json
 
 # === Silence warnings ===
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -36,10 +37,10 @@ selected_model_display = st.sidebar.selectbox("Select the model", model_options,
 if isinstance(selected_model_display, list):
     selected_model_display = selected_model_display[0]
 
-if selected_model_display.split(" ("[0])[0].lower() in [ "xgboost", "lightgbm"]:
+if selected_model_display.split(" ("[0])[0].lower() in ["xgboost", "lightgbm"]:
     selected_model_name = selected_model_display.split(" ("[0])[0].lower()
 else:
-    selected_model_name = selected_model_display.split(" ("[0])[0].lower() + "_" +  selected_model_display.split(" ("[0])[1].lower()
+    selected_model_name = selected_model_display.split(" ("[0])[0].lower() + "_" + selected_model_display.split(" ("[0])[1].lower()
 
 if "simargi" in dataset.lower():
     st.warning("🚧 SIMARGI dataset support is under development. Please select CICIDS-2017.")
@@ -64,8 +65,7 @@ try:
 except Exception as e:
     st.sidebar.error(f"❌ Failed to load model: {e}")
 
-# === Input Section ===
-st.subheader("📥 Input Network Traffic Features")
+# === Default Input Template ===
 default_input = {
     "total_length_of_fwd_packets": 6.0,
     "total_length_of_bwd_packets": 6.0,
@@ -84,11 +84,34 @@ default_input = {
     "init_win_bytes_backward": 256.0
 }
 
+# === Load Preset JSON ===
+PRESET_FILE_PATH = f"{dataset.lower().split()[1]}/docs/test.json"
+preset_data = {}
+if os.path.exists(PRESET_FILE_PATH):
+    with open(PRESET_FILE_PATH, "r") as f:
+        preset_data = json.load(f)
+else:
+    st.error("❌ test.json file not found.")
+    st.stop()
+
+# === Input Section ===
+st.subheader("📥 Input Network Traffic Features")
+input_type = st.radio("Select Input Type", ["Manual", "Preset"], horizontal=True)
 input_json = {}
-cols = st.columns(3)
-for i, key in enumerate(default_input.keys()):
-    with cols[i % 3]:
-        input_json[key] = st.number_input(key, value=default_input[key], format="%.4f")
+feature_names = list(default_input.keys())
+
+if input_type == "Manual":
+    cols = st.columns(3)
+    for i, key in enumerate(feature_names):
+        with cols[i % 3]:
+            input_json[key] = st.number_input(key, value=default_input[key], format="%.4f")
+
+elif input_type == "Preset":
+    selected_attack = st.selectbox("Select Attack Type", list(preset_data.keys()), index=0)
+    input_json = preset_data[selected_attack]
+    st.markdown("### 🧪 Loaded Feature Values:")
+    feature_df = pd.DataFrame([input_json])
+    st.dataframe(feature_df.T.rename(columns={0: "Value"}), use_container_width=True)
 
 predict_btn = st.button("🚀 Predict")
 
@@ -96,7 +119,6 @@ if predict_btn and model_loaded:
     st.divider()
     st.subheader("🎯 Model Prediction")
 
-    feature_names = list(input_json.keys())
     input_df = pd.DataFrame([input_json])
     input_scaled = scaler.transform(input_df)
 
@@ -125,12 +147,12 @@ if predict_btn and model_loaded:
     # === LIME ===
     st.subheader("🧠 LIME Explanation")
     explainer = lime.lime_tabular.LimeTabularExplainer(
-    training_scaled,
-    feature_names=feature_names,
-    class_names=list(le.classes_),
-    mode='classification',
-    discretize_continuous=True,
-    random_state=42
+        training_scaled,
+        feature_names=feature_names,
+        class_names=list(le.classes_),
+        mode='classification',
+        discretize_continuous=True,
+        random_state=42
     )
 
     lime_exp = explainer.explain_instance(input_scaled[0], model.predict_proba, num_features=15, top_labels=5)
@@ -140,15 +162,13 @@ if predict_btn and model_loaded:
         direction = "↑ increases" if val > 0 else "↓ decreases"
         st.write(f"{i}. `{feat}` → **{val:+.4f}** ({direction} prediction)")
 
-    # Plot with title
     fig = lime_exp.as_pyplot_figure(label=predicted_label)
     st.pyplot(fig)
 
     st.markdown("**Interactive LIME Chart:**")
     st.components.v1.html(lime_exp.as_html(labels=[predicted_label]), height=600, scrolling=True)
 
-
-   # === SHAP ===
+    # === SHAP ===
     st.subheader("📌 SHAP Explanation")
     try:
         explainer_shap = shap.Explainer(model, training_scaled)
@@ -167,14 +187,14 @@ if predict_btn and model_loaded:
             shap_input = shap_values_input
             shap_train = shap_values_train
 
-        # === Bar Plot
+        # === SHAP Bar Plot
         st.markdown(f"### 📊 SHAP Bar Plot for `{predicted_class_name}`")
         fig, ax = plt.subplots()
         shap.plots.bar(shap_input[0], max_display=15, show=False)
         plt.title(f'SHAP Bar Plot – Class: {predicted_class_name}')
         st.pyplot(fig)
 
-        # === Beeswarm Plot
+        # === SHAP Beeswarm Plot
         st.markdown(f"### 🐝 SHAP Beeswarm Plot for `{predicted_class_name}`")
         fig2, ax2 = plt.subplots()
         shap.plots.beeswarm(shap_train, max_display=15, show=False)
