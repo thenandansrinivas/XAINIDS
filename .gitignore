@@ -11,3 +11,4 @@ wheels/
 datasets
 docs
 models
+.env
