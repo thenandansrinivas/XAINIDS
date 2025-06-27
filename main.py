@@ -10,6 +10,18 @@ import matplotlib.pyplot as plt
 import warnings
 import json
 import logging
+from dotenv import load_dotenv
+from twilio.rest import Client
+from datetime import datetime
+
+load_dotenv()
+
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_WHATSAPP_FROM = os.getenv("TWILIO_WHATSAPP_FROM")
+TWILIO_WHATSAPP_TO = os.getenv("TWILIO_WHATSAPP_TO")
+
+client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 # Import TensorFlow with maximum suppression
 with warnings.catch_warnings():
@@ -273,8 +285,21 @@ if predict_btn:
 
     predicted_label = y_pred[0]
     predicted_class = le.inverse_transform([predicted_label])[0]
+    probability = y_proba[0][predicted_label] * 100
+    probability_str = f"{int(probability)}" if probability == 100 else f"{probability:.2f}"
 
     st.success(f"🟢 Predicted Class: **{predicted_class}**")
+
+    if(predicted_class not in ["normal", "BENIGN"]):
+        message = client.messages.create(
+        from_=TWILIO_WHATSAPP_FROM,
+        content_sid='HX4efa81cc92b02836502815d1ae209073',
+        content_variables=f'{{"1":" {str(dataset_display).capitalize()}","2":" {str(selected_model_name).capitalize()}","3":" {str(predicted_class).capitalize()}","4":" {probability_str} %","5":" {datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")}"}}',
+        to=TWILIO_WHATSAPP_TO)
+        if(message.sid):
+            st.toast("Notification sent to WhatsApp", icon="🚨")
+    
+    
 
     prob_df = pd.DataFrame({
         "Class": le.inverse_transform(np.arange(len(y_proba[0]))),
