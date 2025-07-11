@@ -1,0 +1,7 @@
+Model,Faithfulness,Faithfulness Rating,Stability,Stability Rating,Complexity,Complexity Rating,Sensitivity,Sensitivity Rating,Coverage,Coverage Rating,Consistency,Consistency Rating
+Random Forest,0.3300,Low,0.0086,High,N/A,High,8.7422,Low,1.0000,High,N/A,N/A
+Decision Tree,0.4330,Low,0.0966,High,N/A,High,25.8412,Low,1.0000,High,N/A,N/A
+XGBoost,0.9390,High,0.4794,Low,N/A,Moderate,239.5927,Low,1.0000,High,N/A,N/A
+LightGBM,N/A,N/A,2110076.4828,Low,N/A,High,54406813.9286,Low,1.0000,High,N/A,N/A
+Logistic Regression,-0.5143,Low,0.1342,Moderate,N/A,High,17.5251,Low,1.0000,High,N/A,N/A
+DNN,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A

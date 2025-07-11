@@ -1,0 +1,7 @@
+Model,Faithfulness,Faithfulness Rating,Stability,Stability Rating,Complexity,Complexity Rating,Sensitivity,Sensitivity Rating,Coverage,Coverage Rating,Consistency,Consistency Rating,Error
+Random Forest,0.6982,Moderate,0.0388,High,N/A,High,8.9429,Low,1.0000,High,N/A,N/A,
+Decision Tree,0.4564,Low,0.2564,Low,N/A,Moderate,19.2570,Low,1.0000,High,N/A,N/A,
+XGBoost,0.7106,Moderate–High,1.6952,Low,N/A,High,170.8324,Low,1.0000,High,N/A,N/A,
+LightGBM,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,"Additivity check failed in TreeExplainer! Please ensure the data matrix you passed to the explainer is the same shape that the model was trained on. If your data shape is correct then please report this on GitHub. This check failed because for one of the samples the sum of the SHAP values was -29.153647, while the model output was -10.374092. If this difference is acceptable you can set check_additivity=False to disable this check."
+Logistic Regression,0.9821,High,0.1468,Moderate,N/A,High,7.9821,Low,1.0000,High,N/A,N/A,
+DNN,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,'Sequential' object has no attribute 'predict_proba'
