@@ -290,17 +290,6 @@ if predict_btn:
 
     st.success(f"🟢 Predicted Class: **{predicted_class}**")
 
-    if(predicted_class not in ["normal", "BENIGN"]):
-        message = client.messages.create(
-        from_=TWILIO_WHATSAPP_FROM,
-        content_sid='HX4efa81cc92b02836502815d1ae209073',
-        content_variables=f'{{"1":" {str(dataset_display).capitalize()}","2":" {str(selected_model_name).capitalize()}","3":" {str(predicted_class).capitalize()}","4":" {probability_str} %","5":" {datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")}"}}',
-        to=TWILIO_WHATSAPP_TO)
-        if(message.sid):
-            st.toast("Notification sent to WhatsApp", icon="🚨")
-    
-    
-
     prob_df = pd.DataFrame({
         "Class": le.inverse_transform(np.arange(len(y_proba[0]))),
         "Probability": y_proba[0]
@@ -402,6 +391,59 @@ if predict_btn:
         st.pyplot(fig2)
         plt.close(fig2)
 
+    
+
     except Exception as e:
         st.error(f"❌ SHAP failed: {str(e)}")
         st.info("This might be due to model compatibility issues with SHAP. Try a different model.")
+
+    if predicted_class.lower() not in ["normal", "benign"]:
+        try:
+            # === Format Top 5 LIME Features ===
+            top_n = 5
+            lime_exp_list = lime_exp.as_list(label=predicted_label)[:top_n]
+            lime_msg = "\n".join([
+                f"{i+1}. {feat} ({'+' if val > 0 else ''}{val:.4f})"
+                for i, (feat, val) in enumerate(lime_exp_list)
+            ])
+
+            # === Format Top 5 SHAP Features ===
+            if len(shap_input.shape) == 3:
+                shap_input_class = shap_input[:, :, predicted_label]
+            else:
+                shap_input_class = shap_input
+
+            shap_values_input_row = shap_input_class[0].values
+            shap_top_idx = np.argsort(np.abs(shap_values_input_row))[::-1][:top_n]
+
+            shap_msg = "\n".join([
+                f"{i+1}. {input_feature_names[idx]} ({shap_values_input_row[idx]:+.4f})"
+                for i, idx in enumerate(shap_top_idx)
+            ])
+
+            # === Format Timestamp ===
+            timestamp = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
+
+            # === Content Variables for WhatsApp Template ===
+            content_variables = {
+                "1": dataset_display.replace("📀", "").strip(),
+                "2": predicted_class.capitalize(),
+                "3": selected_model_name,
+                "4": probability_str,
+                "5": lime_msg,
+                "6": shap_msg,
+                "7": timestamp
+            }
+
+            message = client.messages.create(
+                from_=TWILIO_WHATSAPP_FROM,
+                content_sid='HX0f2f25b0c4272fbca3c6f689ec703b66',
+                content_variables=json.dumps(content_variables),
+                to=TWILIO_WHATSAPP_TO
+            )
+
+            if message.sid:
+                st.toast("🚨 Notification sent to WhatsApp", icon="✅")
+
+        except Exception as e:
+            st.error(f"❌ WhatsApp notification failed: {e}")
