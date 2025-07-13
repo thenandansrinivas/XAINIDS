@@ -427,8 +427,8 @@ if predict_btn:
             # === Content Variables for WhatsApp Template ===
             content_variables = {
                 "1": dataset_display.replace("📀", "").strip(),
-                "2": predicted_class.capitalize(),
-                "3": selected_model_name,
+                "2": selected_model_name,
+                "3": predicted_class.capitalize(),
                 "4": probability_str,
                 "5": lime_msg,
                 "6": shap_msg,
